@@ -1,2 +1,2 @@
-![GitHub GIF](gifmia.gif){:width="400px" height="300px"}
+![GitHub GIF](gifmia.gif){:width="700px" height="600px"}
 
