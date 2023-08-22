@@ -1,3 +1,3 @@
 <p align="center">
-  <img src="gifmia.gif" alt="GitHub GIF" style="max-width: 100%;">
+  <img src="gifmia.gif" alt="GitHub GIF" width="800" height="300">
 </p>
