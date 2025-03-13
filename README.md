@@ -17,7 +17,7 @@
 
 - 📫 How to reach me **niky.bonna@gmail.com**
 
-- 📄 Know about my experiences [linkedin/nicolò-bonacorsi]([www.linkedin.com/in/nicolò-bonacorsi-237a442a6](https://www.linkedin.com/feed/))
+- 📄 Know about my experiences [LinkedIn - Nicolò Bonacorsi](https://www.linkedin.com/in/nicolò-bonacorsi-237a442a6)
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
