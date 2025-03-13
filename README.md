@@ -17,11 +17,11 @@
 
 - 📫 How to reach me **niky.bonna@gmail.com**
 
-- 📄 Know about my experiences [www.linkedin.com/in/nicolò-bonacorsi-237a442a6](www.linkedin.com/in/nicolò-bonacorsi-237a442a6)
+- 📄 Know about my experiences [linkedin/nicolò-bonacorsi]([www.linkedin.com/in/nicolò-bonacorsi-237a442a6](https://www.linkedin.com/feed/))
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
-<a href="https://www.linkedin.com/in/nicol%C3%B2-bonacorsi-237a442a6?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="www.linkedin.com/in/nicolò-bonacorsi-237a442a6" height="30" width="40" /></a>
+<a href="https://www.linkedin.com/feed/"target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="www.linkedin.com/in/nicolò-bonacorsi-237a442a6" height="30" width="40" /></a>
 </p>
 
 <h3 align="left">Languages and Tools:</h3>
