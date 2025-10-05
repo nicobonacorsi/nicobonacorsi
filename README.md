@@ -3,19 +3,18 @@
 </p>
 
 <h1 align="center">Hi 👋, I'm Nicolò Bonacorsi</h1>
-<h3 align="center">I am a university student passionate about mathematics, physics, and artificial intelligence</h3>
+<h3 align="center">I am a mathematician che vede nella Teoria della Probabilità la vera chiave di lettura della realtà  </h3>
 
-- 🤔 What Degrees Do I Have? **Bachelor's degree in Statistical Sciences** - University of Bologna 2024, GPA: 110/110 with honors (https://corsi.unibo.it/laurea/ScienzeStatistiche)
+- 🤔 What Degrees Do I Have? **BS in Statistical Sciences** - University of Bologna 2024, Final Grade: 110/110 with honors (https://corsi.unibo.it/laurea/ScienzeStatistiche)
+                              **BS degree in Mathematical Sciences for AI** - Sapienza University of Rome 2025, Final Grade: 110/110 with honors(https://corsidilaurea.uniroma1.it/it/course/33593)
 
-- 🌱 I’m currently learning **Mathematical Models for Physics**
+- 🌱 I’m currently learning **Analysis and Probability I (PhD course)**, **Probabilistic Models and ML (PhD) course**, **Advanced Probability**, **PDEs**
 
-- 🔢 What Am I Studying? I am currently in my final year of a second degree in **Mathematical Sciences for Artificial Intelligence** at the University of Rome "La Sapienza"(https://corsidilaurea.uniroma1.it/it/corso/2024/31778/home)
+- 🔢 What Am I Studying? I am currently in my first year of the master degree in Applied Mathematics at **Columbia University**
 
-- 🔭 I’m currently working on **Face Recognition: an SVD-based approach for identifying criminals**
+- 👨‍💻 What is My Best Mathematical Work? **Probabilistic Approach to the Collatz Conjecture**, **Chronicles from Deterministic Chaos: The Complexity of Dynamical Systems**
 
-- 👨‍💻 What is My Best Mathematical Work? **Probabilistic Approach to the Collatz Conjecture**
-
-- 📫 How to reach me **niky.bonna@gmail.com**
+- 📫 How to reach me **nb3328@columbia.edu**
 
 - 📄 Know about my experiences [LinkedIn - Nicolò Bonacorsi](https://www.linkedin.com/in/nicolò-bonacorsi-237a442a6)
 
