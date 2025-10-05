@@ -9,10 +9,10 @@
 
 ### 🎓 Academic Background
 
-- 🎯 **M.S. in Applied Mathematics**, *Columbia University* (2025–2026)
-- 📊 **B.S. in Statistical Sciences**, *University of Bologna*, 2024 — Final Grade: <strong>110/110 cum laude</strong>  
+- 🎯 **MS in Applied Mathematics**, *Columbia University* (2025–2026)
+- 📊 **BS in Statistical Sciences**, *University of Bologna*, 2024 — Final Grade: <strong>110/110 cum laude</strong>  
   [Program](https://corsi.unibo.it/laurea/ScienzeStatistiche)
-- 🤖 **B.S. in Mathematical Sciences for AI**, *Sapienza University of Rome*, 2025 — Final Grade: <strong>110/110 cum laude</strong>  
+- 🤖 **BS in Mathematical Sciences for AI**, *Sapienza University of Rome*, 2025 — Final Grade: <strong>110/110 cum laude</strong>  
   [Program](https://corsidilaurea.uniroma1.it/it/course/33593)
 
 ---
@@ -21,8 +21,8 @@
 
 - **Analysis and Probability I (PhD level)**  
 - **Probabilistic Models and Machine Learning (PhD level)**  
-- **Advanced Probability Theory**  
-- **Partial Differential Equations**
+- **Advanced Probability Theory (PhD/MS level)**  
+- **Partial Differential Equations (PhD/MS level)**
 
 ---
 
