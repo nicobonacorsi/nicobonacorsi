@@ -9,55 +9,58 @@ permissions:
   contents: read
 
 jobs:
-  ingest:
+  inspect-official-manifest:
     runs-on: ubuntu-latest
     steps:
-      - name: Download public JKP LMS panel
+      - name: Download official JKP availability manifest
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p artifact
-          URL='https://www.dropbox.com/scl/fo/zxha6i1zcjzx8a3mb2372/AIAIBrWQZYfZ_v3mPXS_BgQ/lms.csv?rlkey=i3wkvrjbadft6hld863571dol&dl=1'
-          curl -fL --retry 5 --retry-delay 2 "$URL" -o artifact/lms.csv
-          test -s artifact/lms.csv
-          file artifact/lms.csv
-          wc -c artifact/lms.csv
-          wc -l artifact/lms.csv
-          sha256sum artifact/lms.csv
-      - name: Inspect schema and coverage
+          curl -fL --retry 5 --retry-delay 2             'https://jkpfactors-data.s3.amazonaws.com/public/availability.json'             -o artifact/availability.json
+          test -s artifact/availability.json
+          sha256sum artifact/availability.json
+      - name: Inspect manifest structure and canonical all-factor availability
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import csv, hashlib, pathlib
-          p=pathlib.Path("artifact/lms.csv")
-          raw=p.read_bytes()
-          print("sha256",hashlib.sha256(raw).hexdigest())
-          with p.open(newline="",encoding="utf-8-sig") as f:
-              r=csv.reader(f)
-              header=next(r)
-              print("columns",header)
-              rows=0; countries=set(); factors=set(); dates=[]
-              for row in r:
-                  if not row: continue
-                  rows+=1
-                  d=dict(zip(header,row))
-                  for key in ("excntry","country","Country"):
-                      if d.get(key): countries.add(d[key])
-                  for key in ("characteristic","name","factor"):
-                      if d.get(key): factors.add(d[key])
-                  for key in ("eom","date"):
-                      if d.get(key): dates.append(d[key])
-              print("data_rows",rows)
-              print("country_count",len(countries))
-              print("factor_count",len(factors))
-              print("date_min",min(dates) if dates else None)
-              print("date_max",max(dates) if dates else None)
+          import json, pathlib, re
+          p=pathlib.Path("artifact/availability.json")
+          obj=json.loads(p.read_text())
+          print("top_type",type(obj).__name__)
+          if isinstance(obj,dict):
+              print("top_keys",list(obj)[:50])
+          matches=[]
+          leaves=[]
+          def walk(x,path=()):
+              if isinstance(x,dict):
+                  for k,v in x.items():
+                      walk(v,path+(str(k),))
+              elif isinstance(x,list):
+                  for i,v in enumerate(x):
+                      walk(v,path+(str(i),))
+              else:
+                  leaves.append((path,x))
+                  joined="|".join(path+(str(x),))
+                  if "all_factors" in joined and "monthly" in joined and "vw_cap" in joined:
+                      matches.append((path,x))
+          walk(obj)
+          print("leaf_count",len(leaves))
+          print("canonical_match_count",len(matches))
+          for path,val in matches[:250]:
+              print("MATCH",repr(path),repr(val))
+          # Also search the raw JSON for literal canonical archive names.
+          raw=p.read_text()
+          pat=re.compile(r"\\[([a-z0-9_]+)\\]_\\[all_factors\\]_\\[monthly\\]_\\[vw_cap\\]\\.zip",re.I)
+          names=sorted(set(pat.findall(raw)))
+          print("literal_archive_country_count",len(names))
+          print("literal_archive_countries",names)
           PY
-      - name: Upload raw snapshot
+      - name: Upload manifest
         uses: actions/upload-artifact@v4
         with:
-          name: jkp-lms-public-snapshot
-          path: artifact/lms.csv
+          name: jkp-official-availability-manifest
+          path: artifact/availability.json
           if-no-files-found: error
           retention-days: 7
