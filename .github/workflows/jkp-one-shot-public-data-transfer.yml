@@ -1,0 +1,63 @@
+name: jkp-one-shot-public-data-transfer
+
+on:
+  push:
+    branches:
+      - jkp-data-transfer-20260924
+
+permissions:
+  contents: read
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download public JKP LMS panel
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifact
+          URL='https://www.dropbox.com/scl/fo/zxha6i1zcjzx8a3mb2372/AIAIBrWQZYfZ_v3mPXS_BgQ/lms.csv?rlkey=i3wkvrjbadft6hld863571dol&dl=1'
+          curl -fL --retry 5 --retry-delay 2 "$URL" -o artifact/lms.csv
+          test -s artifact/lms.csv
+          file artifact/lms.csv
+          wc -c artifact/lms.csv
+          wc -l artifact/lms.csv
+          sha256sum artifact/lms.csv
+      - name: Inspect schema and coverage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, pathlib
+          p=pathlib.Path("artifact/lms.csv")
+          raw=p.read_bytes()
+          print("sha256",hashlib.sha256(raw).hexdigest())
+          with p.open(newline="",encoding="utf-8-sig") as f:
+              r=csv.reader(f)
+              header=next(r)
+              print("columns",header)
+              rows=0; countries=set(); factors=set(); dates=[]
+              for row in r:
+                  if not row: continue
+                  rows+=1
+                  d=dict(zip(header,row))
+                  for key in ("excntry","country","Country"):
+                      if d.get(key): countries.add(d[key])
+                  for key in ("characteristic","name","factor"):
+                      if d.get(key): factors.add(d[key])
+                  for key in ("eom","date"):
+                      if d.get(key): dates.append(d[key])
+              print("data_rows",rows)
+              print("country_count",len(countries))
+              print("factor_count",len(factors))
+              print("date_min",min(dates) if dates else None)
+              print("date_max",max(dates) if dates else None)
+          PY
+      - name: Upload raw snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: jkp-lms-public-snapshot
+          path: artifact/lms.csv
+          if-no-files-found: error
+          retention-days: 7
