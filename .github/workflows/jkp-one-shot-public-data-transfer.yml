@@ -9,58 +9,111 @@ permissions:
   contents: read
 
 jobs:
-  inspect-official-manifest:
+  download-official-panel:
     runs-on: ubuntu-latest
     steps:
-      - name: Download official JKP availability manifest
+      - name: Resolve frozen country universe from official manifest
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p artifact
+          mkdir -p artifact/zips
           curl -fL --retry 5 --retry-delay 2             'https://jkpfactors-data.s3.amazonaws.com/public/availability.json'             -o artifact/availability.json
-          test -s artifact/availability.json
-          sha256sum artifact/availability.json
-      - name: Inspect manifest structure and canonical all-factor availability
+          python - <<'PY'
+          import json, pathlib
+          p=pathlib.Path("artifact/availability.json")
+          a=json.loads(p.read_text())
+          factors=a["factors"]
+          regions=sorted(
+              r.lower() for r, selectors in factors.items()
+              if len(r)==3 and "all_factors" in selectors
+          )
+          print("official_iso3_all_factors_count",len(regions))
+          print("official_iso3_all_factors_regions",regions)
+          if len(regions) != 93:
+              raise SystemExit(f"Expected 93 ISO-3 country archives, got {len(regions)}")
+          pathlib.Path("artifact/regions.txt").write_text("\n".join(regions)+"\n")
+          PY
+      - name: Download 93 official all_factors monthly vw_cap archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat artifact/regions.txt | xargs -I{} -P 12 bash -c '
+            r="$1"
+            u="https://jkpfactors-data.s3.amazonaws.com/public/%5B${r}%5D_%5Ball_factors%5D_%5Bmonthly%5D_%5Bvw_cap%5D.zip"
+            echo "downloading $r"
+            curl -fsSL --retry 5 --retry-delay 1 "$u" -o "artifact/zips/${r}.zip"
+            test -s "artifact/zips/${r}.zip"
+          ' _ {}
+          test "$(find artifact/zips -type f -name '*.zip' | wc -l)" -eq 93
+      - name: Validate archives and freeze provenance
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import json, pathlib, re
-          p=pathlib.Path("artifact/availability.json")
-          obj=json.loads(p.read_text())
-          print("top_type",type(obj).__name__)
-          if isinstance(obj,dict):
-              print("top_keys",list(obj)[:50])
-          matches=[]
-          leaves=[]
-          def walk(x,path=()):
-              if isinstance(x,dict):
-                  for k,v in x.items():
-                      walk(v,path+(str(k),))
-              elif isinstance(x,list):
-                  for i,v in enumerate(x):
-                      walk(v,path+(str(i),))
-              else:
-                  leaves.append((path,x))
-                  joined="|".join(path+(str(x),))
-                  if "all_factors" in joined and "monthly" in joined and "vw_cap" in joined:
-                      matches.append((path,x))
-          walk(obj)
-          print("leaf_count",len(leaves))
-          print("canonical_match_count",len(matches))
-          for path,val in matches[:250]:
-              print("MATCH",repr(path),repr(val))
-          # Also search the raw JSON for literal canonical archive names.
-          raw=p.read_text()
-          pat=re.compile(r"\\[([a-z0-9_]+)\\]_\\[all_factors\\]_\\[monthly\\]_\\[vw_cap\\]\\.zip",re.I)
-          names=sorted(set(pat.findall(raw)))
-          print("literal_archive_country_count",len(names))
-          print("literal_archive_countries",names)
+          import csv, hashlib, json, pathlib, zipfile, io
+          base=pathlib.Path("artifact/zips")
+          rows=[]
+          union=set()
+          global_min=None
+          global_max=None
+          for zp in sorted(base.glob("*.zip")):
+              country=zp.stem
+              h=hashlib.sha256(zp.read_bytes()).hexdigest()
+              with zipfile.ZipFile(zp) as z:
+                  csvs=[n for n in z.namelist() if n.lower().endswith(".csv")]
+                  if len(csvs)!=1:
+                      raise SystemExit(f"{country}: expected one CSV, found {len(csvs)}")
+                  with z.open(csvs[0]) as raw:
+                      f=io.TextIOWrapper(raw,encoding="utf-8-sig",newline="")
+                      rd=csv.DictReader(f)
+                      required={"date","name","ret"}
+                      if not required.issubset(rd.fieldnames or []):
+                          raise SystemExit(f"{country}: bad schema {rd.fieldnames}")
+                      n=0; factors=set(); dmin=None; dmax=None
+                      for row in rd:
+                          n+=1
+                          factors.add(row["name"])
+                          d=row["date"]
+                          dmin=d if dmin is None or d<dmin else dmin
+                          dmax=d if dmax is None or d>dmax else dmax
+                      if len(factors)!=153:
+                          raise SystemExit(f"{country}: expected 153 factors, got {len(factors)}")
+                      union.update(factors)
+                      global_min=dmin if global_min is None or dmin<global_min else global_min
+                      global_max=dmax if global_max is None or dmax>global_max else global_max
+                      rows.append({"country":country,"sha256":h,"rows":n,"factor_count":len(factors),"date_min":dmin,"date_max":dmax})
+          if len(rows)!=93 or len(union)!=153:
+              raise SystemExit(f"panel invariant failed countries={len(rows)} factors={len(union)}")
+          print("validated_countries",len(rows))
+          print("union_factor_count",len(union))
+          print("global_date_min",global_min)
+          print("global_date_max",global_max)
+          print("total_rows",sum(x["rows"] for x in rows))
+          provenance={
+              "source":"official JKP public S3",
+              "manifest_sha256":hashlib.sha256(pathlib.Path("artifact/availability.json").read_bytes()).hexdigest(),
+              "selector":"all_factors",
+              "frequency":"monthly",
+              "weighting":"vw_cap",
+              "country_count":len(rows),
+              "factor_count":len(union),
+              "date_min":global_min,
+              "date_max":global_max,
+              "total_rows":sum(x["rows"] for x in rows),
+              "archives":rows,
+          }
+          pathlib.Path("artifact/provenance.json").write_text(json.dumps(provenance,indent=2)+"\n")
           PY
-      - name: Upload manifest
+          sha256sum artifact/availability.json
+          du -sh artifact/zips
+      - name: Upload official JKP snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: jkp-official-availability-manifest
-          path: artifact/availability.json
+          name: jkp-official-93x153-all-factors-monthly-vw-cap
+          path: |
+            artifact/zips
+            artifact/availability.json
+            artifact/regions.txt
+            artifact/provenance.json
           if-no-files-found: error
           retention-days: 7
