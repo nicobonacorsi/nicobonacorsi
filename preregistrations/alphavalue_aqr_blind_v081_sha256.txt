@@ -1,0 +1,19 @@
+AlphaValue — AQR researcher-blind commodity-carry replication
+Cryptographic pre-data commitment
+Date: 2026-09-27
+
+At the time of this commitment, no numerical AQR commodity data have been opened by this research process.
+
+SHA-256 commitments to the exact frozen files:
+
+153cc672a96d1aec591af3064da156fa97b154bac0faed54ab58baa837b5cf6a  AQR_COMMODITY_CARRY_BLIND_PROTOCOL_V081.md
+d40dc180a77d2976e1c7ea01d239658262c9f89b5f9897a54036484aba52dd5f  BLIND_TEST_SELECTION_V081.md
+24186c32585b6603dc92de142b780caa95022e1c0217120ba6c505a3644afc1f  run_aqr_commodity_blind.py
+0bf5176363ecf77cc8c8027d338fa03a72b8fe264dfa416873a50061ab036f8f  AQR_BLIND_MANIFEST_V081.json
+
+Canonical bundle commitment:
+69dcf3260e66dc93047ea44b9fbb8a7e41046a8a653e16c2b7bbcdc7aa158779
+
+The underlying protocol files are not disclosed by this hash commitment. After the blind replication is completed, the frozen files can be revealed and checked byte-for-byte against these hashes.
+
+Study: AlphaValue researcher-blind historical replication of AQR commodity carry / aggregate backwardation-contango.
