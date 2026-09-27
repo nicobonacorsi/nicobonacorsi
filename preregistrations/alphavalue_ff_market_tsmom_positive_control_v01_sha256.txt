@@ -1,0 +1,9 @@
+AlphaValue external positive control — U.S. market time-series momentum
+Pre-data SHA-256 commitment
+Date: 2026-09-27
+
+No Kenneth French numerical factor file was downloaded or opened by this research process before this commitment.
+
+60e04914edbe8f8a10722d50b90faacbb0ed4178224d8e4c2f166afeba2365b1  FF_MARKET_TSMOM_POSITIVE_CONTROL_PROTOCOL.md
+83b05f28958924e4d59a76389ce2335aafba7a24ccaaa320cb1bb7b861351fc1  run_ff_market_tsmom_positive_control.py
+3cc19568ac7deaab929484919922a1791e60ee8c4991e3550403ac20026be139  FF_MARKET_TSMOM_MANIFEST.json
