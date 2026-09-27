@@ -1,0 +1,9 @@
+AlphaValue canonical multi-asset TSMOM positive control
+Pre-data SHA-256 commitment
+Date: 2026-09-27
+
+The preceding single-U.S.-market positive control is retained. This is the final external positive-control experiment in the current project version, chosen to match the canonical multi-asset TSMOM phenomenon more faithfully.
+
+535bc71e685cd9586b2e2616da86ef4161a4e4b39f5b84634ca588c1bd114d0a  PANEL_TSMOM_POSITIVE_CONTROL_PROTOCOL.md
+d1bf06a984205a2cfaa7df5e0d0f5abf742e6adfe212a282ab9bb5de708319c0  run_panel_tsmom_positive_control.py
+b2496037c3cc37c00b51d51c3f8412de8d8e0bbbd1b2f305948e7301cea7923b  PANEL_TSMOM_MANIFEST.json
