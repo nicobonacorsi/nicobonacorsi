@@ -1,0 +1,25 @@
+name: V109b direct Binance frozen panel
+on:
+  push:
+    branches: [v109b-direct-binance-panel-20260928]
+permissions:
+  contents: read
+jobs:
+  extract:
+    strategy:
+      fail-fast: false
+      matrix:
+        symbol: [LTCUSDT, BCHUSDT, XLMUSDT, TRXUSDT, ETCUSDT, EOSUSDT, FILUSDT, ATOMUSDT, DOTUSDT, UNIUSDT, AAVEUSDT, MKRUSDT]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python -m pip install pandas numpy
+      - run: python tools/v109b_direct_binance_extract.py --symbol ${{ matrix.symbol }} --out v109b_panel
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v109b-${{ matrix.symbol }}
+          path: v109b_panel/${{ matrix.symbol }}/
+          retention-days: 1
