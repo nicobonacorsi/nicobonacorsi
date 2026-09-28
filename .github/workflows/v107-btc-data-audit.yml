@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
-      - run: python -m pip install "huggingface_hub[hf_xet]" duckdb pandas pyarrow
+      - run: python -m pip install "huggingface_hub[hf_xet]" duckdb pandas pyarrow pytz
       - run: python tools/v107_btc_data_audit.py
       - uses: actions/upload-artifact@v4
         with:
