@@ -1,0 +1,33 @@
+name: Temporary Binance public data extract
+
+on:
+  push:
+    branches:
+      - temp-binance-data-fetch-20260928
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install data dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "huggingface_hub[hf_xet]" pandas pyarrow duckdb
+      - name: Build public-data extract
+        env:
+          HF_HUB_DISABLE_PROGRESS_BARS: "1"
+        run: python tools/fetch_binance_public_extract.py
+      - name: Upload extract
+        uses: actions/upload-artifact@v4
+        with:
+          name: binance-public-extract
+          path: binance_public_extract/
+          retention-days: 1
