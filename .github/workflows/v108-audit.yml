@@ -1,0 +1,20 @@
+name: V108 untouched panel metadata audit
+on:
+  push:
+    branches: [v108-audit-20260928]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python -m pip install huggingface_hub
+      - run: python tools/v108_audit.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v108-audit
+          path: v108_audit.json
+          retention-days: 1
