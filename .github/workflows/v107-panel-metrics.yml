@@ -1,0 +1,21 @@
+name: V107 opened-panel metrics diagnostic
+on:
+  push:
+    branches: [v107-panel-fetch-20260928]
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python -m pip install "huggingface_hub[hf_xet]" duckdb pyarrow
+      - run: python tools/v107_panel_metrics.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v107-opened-panel-metrics
+          path: v107_panel_metrics/
+          retention-days: 1
