@@ -1,0 +1,20 @@
+name: V108 eligible-symbol metadata scan
+on:
+  push:
+    branches: [v108-audit-20260928]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python -m pip install huggingface_hub
+      - run: python tools/v108_eligible.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v108-eligible
+          path: v108_eligible.json
+          retention-days: 1
