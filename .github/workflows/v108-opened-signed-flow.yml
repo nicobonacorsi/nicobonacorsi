@@ -1,0 +1,21 @@
+name: V108 opened signed-flow lab
+on:
+  push:
+    branches: [v108-mediation-opened-lab-20260928]
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python -m pip install "huggingface_hub[hf_xet]" duckdb pyarrow pytz
+      - run: python tools/v108_opened_signed_flow.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v108-opened-signed-flow
+          path: v108_opened_signed_flow/
+          retention-days: 1
