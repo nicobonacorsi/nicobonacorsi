@@ -1,0 +1,21 @@
+name: V109 frozen causal panel extract
+on:
+  push:
+    branches: [v109-external-data-20260928]
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python -m pip install "huggingface_hub[hf_xet]" duckdb pyarrow pytz
+      - run: python tools/v109_external_extract.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v109-external-data
+          path: v109_external_data/
+          retention-days: 1
