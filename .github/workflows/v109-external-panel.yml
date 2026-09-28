@@ -1,0 +1,21 @@
+name: V109 frozen external RKD panel
+on:
+  push:
+    branches: [v109-external-rkd-panel-data-20260928]
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python -m pip install "huggingface_hub[hf_xet]" duckdb pyarrow pytz
+      - run: python tools/v109_external_panel_extract.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v109-external-panel
+          path: v109_external_panel/
+          retention-days: 1
