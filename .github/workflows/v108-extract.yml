@@ -1,0 +1,21 @@
+name: V108 frozen untouched panel extract
+on:
+  push:
+    branches: [v108-fetch-20260928]
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: python -m pip install "huggingface_hub[hf_xet]" duckdb pyarrow
+      - run: python tools/v108_extract.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v108-frozen-panel-data
+          path: v108_panel_extract/
+          retention-days: 1
