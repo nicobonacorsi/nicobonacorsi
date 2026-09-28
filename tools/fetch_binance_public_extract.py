@@ -49,7 +49,8 @@ funding = funding[
     (funding.time >= pd.Timestamp("2022-10-01", tz="UTC")) &
     (funding.time <= pd.Timestamp("2026-05-31 23:59:59.999999999", tz="UTC"))
 ].copy()
-funding.to_parquet(out / "funding.parquet", index=False)\nfunding.to_csv(out / "funding.csv.gz", index=False, compression="gzip")
+funding.to_parquet(out / "funding.parquet", index=False)
+funding.to_csv(out / "funding.csv.gz", index=False, compression="gzip")
 
 mr = pd.read_parquet(
     local["metrics"],
@@ -64,7 +65,8 @@ metrics = metrics[
     (metrics.time >= pd.Timestamp("2023-01-01", tz="UTC")) &
     (metrics.time <= pd.Timestamp("2026-05-31 23:59:59.999999999", tz="UTC"))
 ].copy()
-metrics.to_parquet(out / "metrics.parquet", index=False)\nmetrics.to_csv(out / "metrics.csv.gz", index=False, compression="gzip")
+metrics.to_parquet(out / "metrics.parquet", index=False)
+metrics.to_csv(out / "metrics.csv.gz", index=False, compression="gzip")
 
 ft = funding[
     (funding.time >= pd.Timestamp("2023-01-01", tz="UTC")) &
@@ -95,7 +97,8 @@ book["time"] = pd.to_datetime(book["time"], utc=True, errors="coerce")
 book["pct"] = pd.to_numeric(book["pct"], errors="coerce").round(6)
 book["notional"] = pd.to_numeric(book["notional"], errors="coerce")
 book = book.dropna().sort_values("time")
-book.to_parquet(out / "book_funding_windows.parquet", index=False)\nbook.to_csv(out / "book_funding_windows.csv.gz", index=False, compression="gzip")
+book.to_parquet(out / "book_funding_windows.parquet", index=False)
+book.to_csv(out / "book_funding_windows.csv.gz", index=False, compression="gzip")
 
 manifest = {
     "source_repo": REPO,
